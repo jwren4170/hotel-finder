@@ -17,6 +17,7 @@ declare interface Hotel {
   rating: number;
   reviewCount: number;
   stars: number;
+  starRating: number;
   thumbnail: string;
   zip: string;
 }

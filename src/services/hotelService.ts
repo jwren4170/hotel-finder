@@ -1,15 +1,16 @@
 const apiKey = import.meta.env.VITE_API_KEY;
 
-export async function getHotelsList(
+export async function getHotelsByCity(
   country: string,
   city: string
 ): Promise<Hotel[]> {
-  // URL-encode the id name to handle spaces and special characters
+  // URL-encode the city name to handle spaces and special characters
+  const encodedCity = encodeURIComponent(city);
 
   const response = await fetch(
     `${
       import.meta.env.VITE_API_BASE_URL
-    }/hotels?countryCode=${country}&cityName=${city}`,
+    }/hotels?countryCode=${country}&cityName=${encodedCity}`,
     {
       method: 'GET',
       headers: {

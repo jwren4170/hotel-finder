@@ -8,14 +8,15 @@ import {
   createRouter,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import z, { _ZodString } from 'zod';
 
 import './styles.css';
-import reportWebVitals from './reportWebVitals.ts';
 
 import App from './App.tsx';
 import Header from './components/Header.tsx';
+import About from './components/About.tsx';
 import HotelDetail from './components/HotelDetail.tsx';
-import { getHotelsList, getHotelsDetails } from './services/hotelService.ts';
+import { getHotelsByCity, getHotelsDetails } from './services/hotelService.ts';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -27,11 +28,27 @@ const rootRoute = createRootRoute({
   ),
 });
 
+const searchSchema = z.object({
+  country: z.string().optional().default('US'),
+  city: z.string().optional().default('New York'),
+  page: z.number().optional().default(1),
+});
+
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  loader: () => getHotelsList('US', 'Sacramento'),
+  validateSearch: searchSchema.parse,
+  loaderDeps: ({ search }) => ({ search }),
+  loader: async ({ deps }) => {
+    return getHotelsByCity(deps.search.country, deps.search.city);
+  },
   component: App,
+});
+
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: About,
 });
 
 const detailsRoute = createRoute({
@@ -41,7 +58,7 @@ const detailsRoute = createRoute({
   component: HotelDetail,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, detailsRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, detailsRoute, aboutRoute]);
 
 const router = createRouter({
   routeTree,
@@ -67,8 +84,3 @@ if (rootElement && !rootElement.innerHTML) {
     </StrictMode>
   );
 }
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

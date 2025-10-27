@@ -1,27 +1,27 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router';
 
-import { useState } from 'react'
-import { Home, Menu, X } from 'lucide-react'
+import { useState } from 'react';
+import { Home, Menu, X } from 'lucide-react';
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg">
+      <header className='flex items-center bg-gray-800 shadow-lg p-4 text-white'>
         <button
           onClick={() => setIsOpen(true)}
-          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label="Open menu"
+          className='hover:bg-gray-700 p-2 rounded-lg transition-colors'
+          aria-label='Open menu'
         >
           <Menu size={24} />
         </button>
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
+        <h1 className='ml-4 font-semibold text-xl'>
+          <Link to='/' search={{ country: 'US', city: 'New York' }}>
             <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
-              className="h-10"
+              src='/hotel-logo.jpg'
+              alt='TanStack Logo'
+              className='rounded-4xl w-20 h-10'
             />
           </Link>
         </h1>
@@ -32,29 +32,42 @@ export default function Header() {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
+        <div className='flex justify-between items-center p-4 border-gray-700 border-b'>
+          <h2 className='font-bold text-xl'>Navigation</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Close menu"
+            className='hover:bg-gray-800 p-2 rounded-lg transition-colors'
+            aria-label='Close menu'
           >
             <X size={24} />
           </button>
         </div>
 
-        <nav className="flex-1 p-4 overflow-y-auto">
+        <nav className='flex-1 p-4 overflow-y-auto'>
           <Link
-            to="/"
+            to='/'
+            search={{ country: 'US', city: 'New York' }}
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className='flex items-center gap-3 hover:bg-gray-800 mb-2 p-3 rounded-lg transition-colors'
             activeProps={{
               className:
                 'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
             }}
           >
             <Home size={20} />
-            <span className="font-medium">Home</span>
+            <span className='font-medium'>Home</span>
+          </Link>
+
+          <Link
+            to='/about'
+            className='flex items-center gap-3 hover:bg-gray-800 mb-2 p-3 rounded-lg transition-colors'
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+            }}
+          >
+            <Home size={20} />
+            <span className='font-medium'>About Us</span>
           </Link>
 
           {/* Demo Links Start */}
@@ -63,5 +76,5 @@ export default function Header() {
         </nav>
       </aside>
     </>
-  )
+  );
 }
