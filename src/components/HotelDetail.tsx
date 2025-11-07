@@ -1,6 +1,13 @@
 import { useLoaderData, Link } from '@tanstack/react-router';
 import { stripHtmlTags } from '@/lib/utils';
-import { MapPin, Star, Users, ArrowLeft } from 'lucide-react';
+import {
+  MapPin,
+  Star,
+  Users,
+  ArrowLeft,
+  Bed,
+  ChevronRight,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 
@@ -56,7 +63,7 @@ const HotelDetail = () => {
             </div>
 
             {/* Rating Badge */}
-            {hotel.rating > 0 && (
+            {hotel.stars > 0 && (
               <div className='flex items-center gap-3'>
                 <div className='text-right'>
                   <div className='font-semibold text-gray-700 text-lg'>
@@ -127,6 +134,53 @@ const HotelDetail = () => {
                 </CardContent>
               </Card>
             )}
+
+            {/* Available Rooms Card */}
+            {hotel.rooms && hotel.rooms.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2'>
+                    <Bed className='w-5 h-5' />
+                    Available Room Types
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className='gap-4 grid grid-cols-1 md:grid-cols-2'>
+                    {hotel.rooms.map((room) => (
+                      <Link
+                        key={room.id}
+                        to='/details/$hotelId/room/$roomId'
+                        params={{ hotelId: hotel.id, roomId: String(room.id) }}
+                        className='block'
+                      >
+                        <div className='group hover:shadow-md p-4 border hover:border-blue-500 rounded-lg transition-all duration-200'>
+                          <div className='flex justify-between items-center'>
+                            <div className='flex-1'>
+                              <h3 className='font-semibold text-gray-900 group-hover:text-blue-600 transition-colors'>
+                                {room.roomName}
+                              </h3>
+                              {room.maxOccupancy && (
+                                <div className='flex items-center gap-1 mt-1 text-gray-600 text-sm'>
+                                  <Users className='w-4 h-4' />
+                                  <span>Up to {room.maxOccupancy} guests</span>
+                                </div>
+                              )}
+                              {room.price && (
+                                <p className='mt-2 font-semibold text-blue-600 text-lg'>
+                                  {room.currency || hotel.currency}{' '}
+                                  {room.price.toFixed(2)}
+                                </p>
+                              )}
+                            </div>
+                            <ChevronRight className='w-5 h-5 text-gray-400 transition-transform group-hover:translate-x-1' />
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -140,20 +194,20 @@ const HotelDetail = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className='space-y-3'>
-                <div>
+                <div className='flex justify-between'>
                   <p className='font-medium text-gray-900 text-sm'>Address</p>
                   <p className='text-gray-600 text-sm'>
                     {stripHtmlTags(hotel.address)}
                   </p>
                 </div>
-                <div>
+                <div className='flex justify-between'>
                   <p className='font-medium text-gray-900 text-sm'>City</p>
                   <p className='text-gray-600 text-sm'>
                     {hotel.city}, {hotel.country}
                   </p>
                 </div>
                 {hotel.zip && (
-                  <div>
+                  <div className='flex justify-between'>
                     <p className='font-medium text-gray-900 text-sm'>
                       Postal Code
                     </p>
@@ -170,7 +224,7 @@ const HotelDetail = () => {
               </CardHeader>
               <CardContent className='space-y-3'>
                 {hotel.chain && (
-                  <div>
+                  <div className='flex justify-between'>
                     <p className='font-medium text-gray-900 text-sm'>Chain</p>
                     <p className='text-gray-600 text-sm'>{hotel.chain}</p>
                   </div>

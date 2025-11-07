@@ -47,7 +47,7 @@ const SearchForm = () => {
   });
 
   return (
-    <div className='bg-gradient-to-b from-blue-50 to-white py-8'>
+    <div className='bg-linear-to from-blue-50 to-white py-8'>
       <div className='mx-auto px-4 max-w-4xl'>
         <h1 className='mb-6 font-bold text-gray-800 text-3xl text-center'>
           Find Your Perfect Hotel

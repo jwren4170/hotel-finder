@@ -40,7 +40,7 @@ const App = () => {
     <>
       <SearchForm />
       <div className='gap-6 grid grid-cols-1 mx-auto p-6 max-w-7xl'>
-        {paginatedHotels.map((hotel) => (
+        {paginatedHotels.map((hotel: Hotel) => (
           <Card
             key={hotel.id}
             className='group hover:shadow-xl overflow-hidden transition-all duration-300'

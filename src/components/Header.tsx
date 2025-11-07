@@ -17,12 +17,8 @@ export default function Header() {
           <Menu size={24} />
         </button>
         <h1 className='ml-4 font-semibold text-xl'>
-          <Link to='/' search={{ country: 'US', city: 'New York' }}>
-            <img
-              src='/hotel-logo.jpg'
-              alt='TanStack Logo'
-              className='rounded-4xl w-20 h-10'
-            />
+          <Link to='/' search={{ country: 'US', city: 'New York', page: 1 }}>
+            <h1>Hotel Finder</h1>
           </Link>
         </h1>
       </header>
@@ -46,7 +42,7 @@ export default function Header() {
         <nav className='flex-1 p-4 overflow-y-auto'>
           <Link
             to='/'
-            search={{ country: 'US', city: 'New York' }}
+            search={{ country: 'US', city: 'New York', page: 1 }}
             onClick={() => setIsOpen(false)}
             className='flex items-center gap-3 hover:bg-gray-800 mb-2 p-3 rounded-lg transition-colors'
             activeProps={{
@@ -56,18 +52,6 @@ export default function Header() {
           >
             <Home size={20} />
             <span className='font-medium'>Home</span>
-          </Link>
-
-          <Link
-            to='/about'
-            className='flex items-center gap-3 hover:bg-gray-800 mb-2 p-3 rounded-lg transition-colors'
-            activeProps={{
-              className:
-                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
-            }}
-          >
-            <Home size={20} />
-            <span className='font-medium'>About Us</span>
           </Link>
 
           {/* Demo Links Start */}
