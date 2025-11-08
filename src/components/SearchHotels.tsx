@@ -1,9 +1,9 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { z } from 'zod';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Search, MapPin, Globe } from 'lucide-react';
 
 const searchFormSchema = z.object({
@@ -47,13 +47,13 @@ const SearchForm = () => {
   });
 
   return (
-    <div className='bg-linear-to from-blue-50 to-white py-8'>
+    <div className='bg-linear-to-br from-primary/10 to-accent/10 py-8'>
       <div className='mx-auto px-4 max-w-4xl'>
-        <h1 className='mb-6 font-bold text-gray-800 text-3xl text-center'>
+        <h1 className='mb-6 font-bold text-foreground text-3xl text-center'>
           Find Your Perfect Hotel
         </h1>
         <form
-          className='bg-white shadow-lg mx-auto p-6 rounded-xl max-w-3xl'
+          className='bg-card shadow-lg mx-auto p-6 border border-border rounded-xl max-w-3xl'
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -77,7 +77,7 @@ const SearchForm = () => {
               {(field) => (
                 <div className='flex flex-col gap-2'>
                   <Label
-                    className='font-medium text-gray-700 text-sm'
+                    className='font-medium text-gray-700 dark:text-gray-300 text-sm'
                     htmlFor='country'
                   >
                     <Globe className='inline-block mr-1.5 w-4 h-4' />
@@ -88,7 +88,7 @@ const SearchForm = () => {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className='px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md outline-none focus:ring-2 focus:ring-blue-500'
+                    className='bg-background px-3 py-2 border border-input focus:border-primary rounded-md outline-none focus:ring-2 focus:ring-primary text-foreground'
                   >
                     {POPULAR_COUNTRIES.map((country) => (
                       <option key={country.code} value={country.code}>
@@ -97,7 +97,7 @@ const SearchForm = () => {
                     ))}
                   </select>
                   {field.state.meta.errors.length > 0 && (
-                    <span className='text-red-500 text-xs'>
+                    <span className='text-red-500 dark:text-red-400 text-xs'>
                       {field.state.meta.errors.join(', ')}
                     </span>
                   )}
@@ -120,7 +120,7 @@ const SearchForm = () => {
               {(field) => (
                 <div className='flex flex-col gap-2'>
                   <Label
-                    className='font-medium text-gray-700 text-sm'
+                    className='font-medium text-gray-700 dark:text-gray-300 text-sm'
                     htmlFor='city'
                   >
                     <MapPin className='inline-block mr-1.5 w-4 h-4' />
@@ -150,7 +150,7 @@ const SearchForm = () => {
             >
               {([canSubmit, isSubmitting]) => (
                 <Button
-                  className='gap-2 bg-blue-600 hover:bg-blue-700 md:mt-7 h-10'
+                  className='gap-2 bg-primary/90 hover:bg-primary/70 md:mt-7 h-10'
                   variant='default'
                   type='submit'
                   disabled={!canSubmit}

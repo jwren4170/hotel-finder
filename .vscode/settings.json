@@ -8,5 +8,7 @@
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
   },
-  "postman.settings.dotenv-detection-notification-visibility": false
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative"
 }

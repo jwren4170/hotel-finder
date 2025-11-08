@@ -8,8 +8,9 @@ import {
   CheckCircle,
   MapPin,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import RoomPhotoCarousel from '@/components/RoomPhotoCarousel';
 
 const RoomDetails = () => {
   const { hotel, room, hasAvailability } = useLoaderData({
@@ -37,9 +38,9 @@ const RoomDetails = () => {
   }
 
   return (
-    <div className='bg-gray-50 min-h-screen'>
+    <div className='bg-background min-h-screen'>
       {/* Back Button */}
-      <div className='bg-white shadow-sm'>
+      <div className='bg-card shadow-sm border-border border-b'>
         <div className='mx-auto px-4 py-4 max-w-6xl'>
           <Link to='/details/$hotelId' params={{ hotelId: hotel.id }}>
             <Button variant='ghost' className='gap-2'>
@@ -54,10 +55,10 @@ const RoomDetails = () => {
         {/* Header Section */}
         <div className='mb-6'>
           <div className='mb-3'>
-            <h1 className='mb-2 font-bold text-gray-900 text-3xl md:text-4xl'>
+            <h1 className='mb-2 font-bold text-foreground text-3xl md:text-4xl'>
               {room.roomName}
             </h1>
-            <div className='flex items-center gap-2 text-gray-600'>
+            <div className='flex items-center gap-2 text-muted-foreground'>
               <MapPin className='w-5 h-5' />
               <span className='text-lg'>
                 {hotel.name} - {hotel.city}, {hotel.country}
@@ -67,28 +68,18 @@ const RoomDetails = () => {
 
           {/* Price Badge */}
           {room.price && (
-            <div className='inline-block bg-blue-600 shadow-lg px-6 py-3 rounded-xl'>
-              <div className='font-bold text-white text-2xl'>
+            <div className='inline-block bg-accent shadow-lg px-6 py-3 rounded-xl'>
+              <div className='font-bold text-2xl text-accent-foreground'>
                 {room.currency || hotel.currency} {room.price.toFixed(2)}
               </div>
-              <div className='text-blue-100 text-sm'>per night</div>
+              <div className='text-sm text-accent-foreground/80'>per night</div>
             </div>
           )}
         </div>
 
-        {/* Room photos */}
+        {/* Room photos carousel */}
         {room.photos && room.photos.length > 0 && (
-          <div className='gap-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mb-8'>
-            {room.photos.map((photo, index) => (
-              <div key={index} className='rounded-xl overflow-hidden'>
-                <img
-                  src={photo.url}
-                  alt={`${room.roomName}  ${index + 1}`}
-                  className='w-full h-64 object-cover'
-                />
-              </div>
-            ))}
-          </div>
+          <RoomPhotoCarousel photos={room.photos} roomName={room.roomName} />
         )}
 
         <div className='gap-6 grid grid-cols-1 lg:grid-cols-3'>
@@ -101,7 +92,7 @@ const RoomDetails = () => {
                   <CardTitle>Room Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-gray-700 leading-relaxed'>
+                  <p className='text-gray-700 dark:text-gray-300 leading-relaxed'>
                     {stripHtmlTags(room.description)}
                   </p>
                 </CardContent>
@@ -118,8 +109,10 @@ const RoomDetails = () => {
                   <div className='gap-3 grid grid-cols-2 md:grid-cols-3'>
                     {room.roomAmenities.map((amenity, index) => (
                       <div key={index} className='flex items-center gap-2'>
-                        <CheckCircle className='w-5 h-5 text-green-600' />
-                        <span className='text-gray-700'>{amenity.name}</span>
+                        <CheckCircle className='w-5 h-5 text-green-600 dark:text-green-400' />
+                        <span className='text-gray-700 dark:text-gray-300'>
+                          {amenity.name}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -135,16 +128,16 @@ const RoomDetails = () => {
               <CardHeader>
                 <CardTitle>Room Details</CardTitle>
               </CardHeader>
-              <CardContent className='space-y-3'>
+              <CardContent className='space-y-4'>
                 {room.maxOccupancy && (
                   <div className='flex justify-between'>
                     <div className='flex items-center gap-2 mb-1'>
-                      <Users className='w-4 h-4 text-gray-600' />
-                      <p className='font-medium text-gray-900 text-sm'>
+                      <Users className='w-4 h-4 text-gray-600 dark:text-gray-400' />
+                      <p className='font-medium text-gray-900 dark:text-gray-200 text-sm'>
                         Maximum Occupancy
                       </p>
                     </div>
-                    <p className='text-gray-600 text-sm'>
+                    <p className='text-gray-600 dark:text-gray-300 text-sm'>
                       {room.maxOccupancy} guests
                     </p>
                   </div>
@@ -152,10 +145,10 @@ const RoomDetails = () => {
 
                 {room.maxAdults && (
                   <div className='flex justify-between'>
-                    <p className='font-medium text-gray-900 text-sm'>
+                    <p className='font-medium text-gray-900 dark:text-gray-200 text-sm'>
                       Maximum Adults
                     </p>
-                    <p className='text-gray-600 text-sm'>
+                    <p className='text-gray-600 dark:text-gray-300 text-sm'>
                       {room.maxAdults} adults
                     </p>
                   </div>
@@ -163,24 +156,24 @@ const RoomDetails = () => {
 
                 {room.maxChildren && (
                   <div className='flex justify-between'>
-                    <p className='font-medium text-gray-900 text-sm'>
+                    <p className='font-medium text-gray-900 dark:text-gray-200 text-sm'>
                       Maximum Children
                     </p>
-                    <p className='text-gray-600 text-sm'>
+                    <p className='text-gray-600 dark:text-gray-300 text-sm'>
                       {room.maxChildren} children
                     </p>
                   </div>
                 )}
 
                 {room.bedTypes && room.bedTypes.length > 0 && (
-                  <div className='flex justify-between'>
-                    <div className='flex items-center gap-2 mb-1'>
-                      <Bed className='w-4 h-4 text-gray-600' />
-                      <p className='font-medium text-gray-900 text-sm'>
+                  <div>
+                    <div className='flex items-center gap-2 mb-2'>
+                      <Bed className='w-4 h-4 text-gray-600 dark:text-gray-400' />
+                      <p className='font-medium text-gray-900 dark:text-gray-200 text-sm'>
                         Bed Type
                       </p>
                     </div>
-                    <p className='text-gray-600 text-sm'>
+                    <p className='text-gray-600 dark:text-gray-300 text-sm leading-relaxed'>
                       {room.bedTypes[0].bedType}
                     </p>
                   </div>
@@ -189,12 +182,12 @@ const RoomDetails = () => {
                 {room.roomSizeSquare && (
                   <div className='flex justify-between'>
                     <div className='flex items-center gap-2 mb-1'>
-                      <Maximize className='w-4 h-4 text-gray-600' />
-                      <p className='font-medium text-gray-900 text-sm'>
+                      <Maximize className='w-4 h-4 text-gray-600 dark:text-gray-400' />
+                      <p className='font-medium text-gray-900 dark:text-gray-200 text-sm'>
                         Room Size
                       </p>
                     </div>
-                    <p className='text-gray-600 text-sm'>
+                    <p className='text-gray-600 dark:text-gray-300 text-sm'>
                       {room.roomSizeSquare} sqft
                     </p>
                   </div>
@@ -223,7 +216,7 @@ const RoomDetails = () => {
                         Book This Room
                       </Button>
                     </Link>
-                    <p className='mt-3 text-gray-500 text-sm text-center'>
+                    <p className='mt-3 text-gray-500 dark:text-gray-400 text-sm text-center'>
                       Best price guarantee
                     </p>
                   </>
@@ -232,7 +225,7 @@ const RoomDetails = () => {
                     <Button className='w-full' size='lg' disabled>
                       No Availability
                     </Button>
-                    <p className='mt-3 text-gray-500 text-sm text-center'>
+                    <p className='mt-3 text-gray-500 dark:text-gray-400 text-sm text-center'>
                       This room is not available for the selected dates
                     </p>
                   </>

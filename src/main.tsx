@@ -12,16 +12,18 @@ import z, { _ZodString } from 'zod';
 
 import './styles.css';
 
-import App from './App.tsx';
-import Header from './components/Header.tsx';
-import HotelDetail from './components/HotelDetail.tsx';
-import RoomDetails from './components/RoomDetails.tsx';
+import App from '@/App.tsx';
+import Header from '@/components/Header.tsx';
+import HotelDetail from '@/components/HotelDetail.tsx';
+import RoomDetails from '@/components/RoomDetails.tsx';
+import ErrorComponent from '@/components/ErrorComponent';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   getHotelsByCity,
   getHotelDetails,
   getRoomRates,
-} from './services/hotelService.ts';
-import RoomRates from './components/RoomRates.tsx';
+} from '@/services/hotelService';
+import RoomRates from '@/components/RoomRates.tsx';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -31,6 +33,7 @@ const rootRoute = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
+  errorComponent: ErrorComponent,
 });
 
 const searchSchema = z.object({
@@ -48,6 +51,9 @@ const indexRoute = createRoute({
     return getHotelsByCity(deps.search.country, deps.search.city);
   },
   component: App,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Searching for hotels...' />
+  ),
 });
 
 const detailsRoute = createRoute({
@@ -55,6 +61,9 @@ const detailsRoute = createRoute({
   path: '/details/$hotelId',
   loader: ({ params }) => getHotelDetails(params.hotelId),
   component: HotelDetail,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading hotel details...' />
+  ),
 });
 
 const roomDetailsRoute = createRoute({
@@ -98,6 +107,9 @@ const roomDetailsRoute = createRoute({
     return { hotel, room, hasAvailability };
   },
   component: RoomDetails,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading room details...' />
+  ),
 });
 
 const roomRatesSearchSchema = z.object({
@@ -133,6 +145,9 @@ const roomRatesRoom = createRoute({
     return { hotel, room, rates };
   },
   component: RoomRates,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading available rates...' />
+  ),
 });
 
 const routeTree = rootRoute.addChildren([

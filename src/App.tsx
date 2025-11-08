@@ -81,10 +81,10 @@ const App = () => {
                   <CardHeader className='pb-3'>
                     <div className='flex justify-between items-start gap-4'>
                       <div className='flex-1'>
-                        <CardTitle className='mb-2 font-bold group-hover:text-blue-600 text-xl line-clamp-2 transition-colors'>
+                        <CardTitle className='mb-2 font-bold group-hover:text-primary text-xl line-clamp-2 transition-colors'>
                           {hotel.name}
                         </CardTitle>
-                        <div className='flex items-center gap-1.5 text-gray-600 text-sm'>
+                        <div className='flex items-center gap-1.5 text-muted-foreground text-sm'>
                           <MapPin className='w-4 h-4' />
                           <span>
                             {hotel.city}, {hotel.country}
@@ -97,7 +97,7 @@ const App = () => {
                         <div className='flex flex-col items-end shrink-0'>
                           <div className='flex items-center gap-2'>
                             <div className='text-right'>
-                              <div className='font-semibold text-gray-700 text-sm'>
+                              <div className='font-semibold text-card-foreground text-sm'>
                                 {hotel.rating >= 8
                                   ? 'Excellent'
                                   : hotel.rating >= 7
@@ -107,12 +107,12 @@ const App = () => {
                                   : 'Pleasant'}
                               </div>
                               {hotel.reviewCount > 0 && (
-                                <div className='text-gray-500 text-xs'>
+                                <div className='text-muted-foreground text-xs'>
                                   {hotel.reviewCount.toLocaleString()} reviews
                                 </div>
                               )}
                             </div>
-                            <div className='bg-blue-600 shadow-md px-3 py-2 rounded-lg font-bold text-white text-xl'>
+                            <div className='bg-primary shadow-md px-3 py-2 rounded-lg font-bold text-primary-foreground text-xl'>
                               {hotel.rating.toFixed(1)}
                             </div>
                           </div>
@@ -122,14 +122,14 @@ const App = () => {
                   </CardHeader>
 
                   <CardContent className='flex-1'>
-                    <CardDescription className='text-gray-700 text-sm line-clamp-3 leading-relaxed'>
+                    <CardDescription className='text-card-foreground text-sm line-clamp-3 leading-relaxed'>
                       {stripHtmlTags(truncateText(hotel.hotelDescription, 300))}
                     </CardDescription>
                   </CardContent>
 
                   <CardContent className='pt-0'>
                     <div className='flex justify-between items-center'>
-                      <span className='font-medium text-blue-600 text-sm hover:underline'>
+                      <span className='font-medium text-primary text-sm hover:underline'>
                         View details →
                       </span>
                     </div>

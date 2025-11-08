@@ -1,16 +1,23 @@
 const apiKey = import.meta.env.VITE_API_KEY;
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+console.log(apiBaseUrl);
 
 export async function getHotelsByCity(
   country: string,
   city: string
 ): Promise<Hotel[]> {
+  // Check for API configuration
+  if (!apiKey || !apiBaseUrl) {
+    throw new Error(
+      'API configuration is missing. Please check your .env file and ensure VITE_API_KEY and VITE_API_BASE_URL are set.'
+    );
+  }
+
   // URL-encode the city name to handle spaces and special characters
   const encodedCity = encodeURIComponent(city);
 
   const response = await fetch(
-    `${
-      import.meta.env.VITE_API_BASE_URL
-    }/hotels?countryCode=${country}&cityName=${encodedCity}`,
+    `${apiBaseUrl}/hotels?countryCode=${country}&cityName=${encodedCity}`,
     {
       method: 'GET',
       headers: {
@@ -26,6 +33,15 @@ export async function getHotelsByCity(
       errorData?.error?.message || `HTTP error! Status: ${response.status}`;
     throw new Error(errorMessage);
   }
+
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error(
+      'Invalid API response. Please verify your API key and base URL are correct.'
+    );
+  }
+
   // 1. Await the promise from response.json()
   const result = await response.json();
   console.log(result.data);
@@ -35,18 +51,22 @@ export async function getHotelsByCity(
 
 // Get/id
 export async function getHotelDetails(id: string): Promise<Hotel> {
+  // Check for API configuration
+  if (!apiKey || !apiBaseUrl) {
+    throw new Error(
+      'API configuration is missing. Please check your .env file and ensure VITE_API_KEY and VITE_API_BASE_URL are set.'
+    );
+  }
+
   // URL-encode the city name to handle spaces and special characters
   const encodedId = encodeURIComponent(id);
 
-  const response = await fetch(
-    `${import.meta.env.VITE_API_BASE_URL}/hotel?hotelId=${encodedId}`,
-    {
-      method: 'GET',
-      headers: {
-        'X-API-Key': apiKey,
-      },
-    }
-  );
+  const response = await fetch(`${apiBaseUrl}/hotel?hotelId=${encodedId}`, {
+    method: 'GET',
+    headers: {
+      'X-API-Key': apiKey,
+    },
+  });
 
   if (!response.ok) {
     // Try to parse the error response from the API for a better message
@@ -55,6 +75,15 @@ export async function getHotelDetails(id: string): Promise<Hotel> {
       errorData?.error?.message || `HTTP error! Status: ${response.status}`;
     throw new Error(errorMessage);
   }
+
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error(
+      'Invalid API response. Please verify your API key and base URL are correct.'
+    );
+  }
+
   // 1. Await the promise from response.json()
   const result = await response.json();
   console.log(result.data);
@@ -68,6 +97,13 @@ export async function getRoomRates(
   checkoutDate: string,
   occupancies: { adults: number; childrenAges: number[] }[] | undefined
 ) {
+  // Check for API configuration
+  if (!apiKey) {
+    throw new Error(
+      'API configuration is missing. Please check your .env file and ensure VITE_API_KEY is set.'
+    );
+  }
+
   const response = await fetch(`https://api.liteapi.travel/v3.0/hotels/rates`, {
     method: 'POST',
     headers: {
@@ -90,6 +126,14 @@ export async function getRoomRates(
     const errorMessage =
       errorData?.error?.message || `HTTP error! Status: ${response.status}`;
     throw new Error(errorMessage);
+  }
+
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error(
+      'Invalid API response. Please verify your API key is correct.'
+    );
   }
 
   const data = await response.json();
