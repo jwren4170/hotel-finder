@@ -1,4 +1,4 @@
-import { useLoaderData, Link } from '@tanstack/react-router';
+import { useLoaderData, Link, useSearch } from '@tanstack/react-router';
 import { stripHtmlTags } from '@/lib/utils';
 import {
   ArrowLeft,
@@ -16,6 +16,9 @@ const RoomDetails = () => {
   const { hotel, room, hasAvailability } = useLoaderData({
     from: '/details/$hotelId/room/$roomId',
   });
+  const { country, city, page } = useSearch({
+    from: '/details/$hotelId/room/$roomId',
+  });
 
   // console.log('hasAvailability:', hasAvailability);
 
@@ -29,7 +32,11 @@ const RoomDetails = () => {
           <p className='mb-4 text-gray-600'>
             The room you're looking for doesn't exist.
           </p>
-          <Link to='/details/$hotelId' params={{ hotelId: hotel.id }}>
+          <Link
+            to='/details/$hotelId'
+            params={{ hotelId: hotel.id }}
+            search={{ country, city, page }}
+          >
             <Button variant='default'>Back to Hotel</Button>
           </Link>
         </div>
@@ -42,7 +49,11 @@ const RoomDetails = () => {
       {/* Back Button */}
       <div className='bg-card shadow-sm border-border border-b'>
         <div className='mx-auto px-4 py-4 max-w-6xl'>
-          <Link to='/details/$hotelId' params={{ hotelId: hotel.id }}>
+          <Link
+            to='/details/$hotelId'
+            params={{ hotelId: hotel.id }}
+            search={{ country, city, page }}
+          >
             <Button variant='ghost' className='gap-2'>
               <ArrowLeft className='w-4 h-4' />
               Back to Hotel
@@ -210,6 +221,9 @@ const RoomDetails = () => {
                         checkinDate: '2025-11-10',
                         checkoutDate: '2025-11-15',
                         adults: 2,
+                        country,
+                        city,
+                        page,
                       }}
                     >
                       <Button className='w-full cursor-pointer' size='lg'>

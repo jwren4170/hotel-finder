@@ -48,6 +48,7 @@ const App = () => {
             <Link
               to='/details/$hotelId'
               params={{ hotelId: hotel.id }}
+              search={{ country, city, page }}
               className='block'
             >
               <div className='md:flex'>

@@ -13,12 +13,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { stripHtmlTags } from '@/lib/utils';
+import BookingForm from '@/components/BookingForm';
+import BookingConfirmation from '@/components/BookingConfirmation';
 
 const RoomRates = () => {
   const { hotel, room, rates } = useLoaderData({
     from: '/details/$hotelId/room/$roomId/rates',
   });
-  const { checkinDate, checkoutDate, adults } = useSearch({
+  const { checkinDate, checkoutDate, adults, country, city, page } = useSearch({
     from: '/details/$hotelId/room/$roomId/rates',
   });
 
@@ -30,6 +32,8 @@ const RoomRates = () => {
   // );
 
   const [expandedRooms, setExpandedRooms] = useState<Set<number>>(new Set());
+  const [selectedRoomType, setSelectedRoomType] = useState<any | null>(null);
+  const [bookingId, setBookingId] = useState<number | null>(null);
 
   const toggleRoom = (index: number) => {
     const newExpanded = new Set(expandedRooms);
@@ -39,6 +43,19 @@ const RoomRates = () => {
       newExpanded.add(index);
     }
     setExpandedRooms(newExpanded);
+  };
+
+  const handleSelectRoom = (roomType: any) => {
+    setSelectedRoomType(roomType);
+  };
+
+  const handleBookingSuccess = (id: number) => {
+    setBookingId(id);
+    setSelectedRoomType(null);
+  };
+
+  const handleCancelBooking = () => {
+    setSelectedRoomType(null);
   };
 
   if (!room) {
@@ -51,7 +68,11 @@ const RoomRates = () => {
           <p className='mb-4 text-gray-600 dark:text-gray-300'>
             The room you're looking for doesn't exist.
           </p>
-          <Link to='/details/$hotelId' params={{ hotelId: hotel.id }}>
+          <Link
+            to='/details/$hotelId'
+            params={{ hotelId: hotel.id }}
+            search={{ country, city, page }}
+          >
             <Button variant='default'>Back to Hotel</Button>
           </Link>
         </div>
@@ -101,6 +122,7 @@ const RoomRates = () => {
           <Link
             to='/details/$hotelId/room/$roomId'
             params={{ hotelId: hotel.id, roomId: String(room.id) }}
+            search={{ country, city, page }}
           >
             <Button variant='ghost' className='gap-2'>
               <ArrowLeft className='w-4 h-4' />
@@ -174,6 +196,34 @@ const RoomRates = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Booking Confirmation */}
+        {bookingId && (
+          <div className='mb-6'>
+            <BookingConfirmation bookingId={bookingId} />
+          </div>
+        )}
+
+        {/* Booking Form */}
+        {selectedRoomType && !bookingId && (
+          <div className='mb-6'>
+            <BookingForm
+              hotelId={hotel.id}
+              hotelName={hotel.name}
+              roomId={room.id}
+              roomName={
+                room.roomName || selectedRoomType.name || 'Standard Room'
+              }
+              checkinDate={checkinDate}
+              checkoutDate={checkoutDate}
+              adults={adults}
+              totalPrice={selectedRoomType.offerInitialPrice?.amount || '0'}
+              currency={selectedRoomType.offerInitialPrice?.currency || 'USD'}
+              onSuccess={handleBookingSuccess}
+              onCancel={handleCancelBooking}
+            />
+          </div>
+        )}
 
         {/* Rates List */}
         <div className='space-y-4'>
@@ -272,6 +322,7 @@ const RoomRates = () => {
                           <Button
                             className='whitespace-nowrap cursor-pointer'
                             size='default'
+                            onClick={() => handleSelectRoom(roomType)}
                           >
                             Select Room
                           </Button>
@@ -311,6 +362,7 @@ const RoomRates = () => {
                   <Link
                     to='/details/$hotelId/room/$roomId'
                     params={{ hotelId: hotel.id, roomId: String(room.id) }}
+                    search={{ country, city, page }}
                   >
                     <Button variant='outline' className='mt-4'>
                       Back to Room Details

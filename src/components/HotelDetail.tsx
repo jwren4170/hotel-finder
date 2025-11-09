@@ -1,4 +1,4 @@
-import { useLoaderData, Link } from '@tanstack/react-router';
+import { useLoaderData, Link, useSearch } from '@tanstack/react-router';
 import { stripHtmlTags } from '@/lib/utils';
 import {
   MapPin,
@@ -13,6 +13,9 @@ import { Button } from '@/components/ui/button';
 
 const HotelDetail = () => {
   const hotel = useLoaderData({ from: '/details/$hotelId' });
+  const { country, city, page, from } = useSearch({
+    from: '/details/$hotelId',
+  });
 
   if (!hotel) {
     return (
@@ -24,7 +27,7 @@ const HotelDetail = () => {
           <p className='mb-4 text-gray-600'>
             The hotel you're looking for doesn't exist.
           </p>
-          <Link to='/' search={{ country: 'US', city: 'New York', page: 1 }}>
+          <Link to='/' search={{ country, city, page }}>
             <Button variant='default'>Back to Search</Button>
           </Link>
         </div>
@@ -37,12 +40,21 @@ const HotelDetail = () => {
       {/* Back Button */}
       <div className='bg-card shadow-sm border-border border-b'>
         <div className='mx-auto px-4 py-4 max-w-6xl'>
-          <Link to='/' search={{ country: 'US', city: 'New York', page: 1 }}>
-            <Button variant='ghost' className='gap-2'>
-              <ArrowLeft className='w-4 h-4' />
-              Back to Results
-            </Button>
-          </Link>
+          {from === 'bookings' ? (
+            <Link to='/bookings'>
+              <Button variant='ghost' className='gap-2'>
+                <ArrowLeft className='w-4 h-4' />
+                Back to My Bookings
+              </Button>
+            </Link>
+          ) : (
+            <Link to='/' search={{ country, city, page }}>
+              <Button variant='ghost' className='gap-2'>
+                <ArrowLeft className='w-4 h-4' />
+                Back to Results
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -224,6 +236,7 @@ const HotelDetail = () => {
                       key={room.id}
                       to='/details/$hotelId/room/$roomId'
                       params={{ hotelId: hotel.id, roomId: String(room.id) }}
+                      search={{ country, city, page }}
                       className='block'
                     >
                       <div className='group hover:shadow-md p-4 border border-border hover:border-primary rounded-lg transition-all duration-200'>

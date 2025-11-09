@@ -16,6 +16,7 @@ import App from '@/App.tsx';
 import Header from '@/components/Header.tsx';
 import HotelDetail from '@/components/HotelDetail.tsx';
 import RoomDetails from '@/components/RoomDetails.tsx';
+import MyBookings from '@/components/MyBookings.tsx';
 import ErrorComponent from '@/components/ErrorComponent';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {
@@ -56,9 +57,17 @@ const indexRoute = createRoute({
   ),
 });
 
+const detailsSearchSchema = z.object({
+  country: z.string().optional().default('US'),
+  city: z.string().optional().default('New York'),
+  page: z.number().optional().default(1),
+  from: z.string().optional(), // Track where user came from: 'bookings' or undefined
+});
+
 const detailsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/details/$hotelId',
+  validateSearch: detailsSearchSchema.parse,
   loader: ({ params }) => getHotelDetails(params.hotelId),
   component: HotelDetail,
   pendingComponent: () => (
@@ -66,9 +75,16 @@ const detailsRoute = createRoute({
   ),
 });
 
+const roomDetailsSearchSchema = z.object({
+  country: z.string().optional().default('US'),
+  city: z.string().optional().default('New York'),
+  page: z.number().optional().default(1),
+});
+
 const roomDetailsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/details/$hotelId/room/$roomId',
+  validateSearch: roomDetailsSearchSchema.parse,
   loader: async ({ params }) => {
     // Get the hotel details which includes rooms
     const hotel = await getHotelDetails(params.hotelId);
@@ -116,6 +132,9 @@ const roomRatesSearchSchema = z.object({
   checkinDate: z.string().optional().default('2025-11-10'),
   checkoutDate: z.string().optional().default('2025-11-15'),
   adults: z.number().optional().default(2),
+  country: z.string().optional().default('US'),
+  city: z.string().optional().default('New York'),
+  page: z.number().optional().default(1),
 });
 
 const roomRatesRoom = createRoute({
@@ -150,11 +169,29 @@ const roomRatesRoom = createRoute({
   ),
 });
 
+const bookingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/bookings',
+  loader: async () => {
+    const response = await fetch('http://localhost:3001/api/bookings');
+    if (!response.ok) {
+      throw new Error('Failed to fetch bookings');
+    }
+    const data = await response.json();
+    return data.bookings || [];
+  },
+  component: MyBookings,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading your bookings...' />
+  ),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   detailsRoute,
   roomDetailsRoute,
   roomRatesRoom,
+  bookingsRoute,
 ]);
 
 const router = createRouter({
