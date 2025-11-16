@@ -5,20 +5,14 @@ import {
   decimal,
   timestamp,
   date,
-  serial,
 } from 'drizzle-orm/pg-core';
 
-// Keep the users table for testing (can remove later)
-export const usersTable = pgTable('users', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
-});
+// Better Auth will create its own tables (user, session, account, verification)
+// We just need to define our custom tables here
 
 // Bookings table for hotel reservations
 export const bookingsTable = pgTable('bookings', {
-  id: serial('id').primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   hotelId: varchar('hotel_id', { length: 255 }).notNull(),
   hotelName: varchar('hotel_name', { length: 255 }).notNull(),
   roomId: integer('room_id').notNull(),
