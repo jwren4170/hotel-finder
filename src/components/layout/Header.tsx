@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 
 import { useState } from 'react';
 import { Home, Menu, X, Calendar } from 'lucide-react';
-import ThemeToggle from '@/components/ThemeToggle';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +24,12 @@ export default function Header() {
             </Link>
           </h1>
         </div>
-        <ThemeToggle />
+        <div className='flex items-center mr-10'>
+          <ThemeToggle />
+          <h1>
+            <Link to='/login'>Login</Link>
+          </h1>
+        </div>
       </header>
 
       <aside
@@ -69,6 +74,19 @@ export default function Header() {
           >
             <Calendar size={20} />
             <span className='font-medium'>My Bookings</span>
+          </Link>
+
+          <Link
+            to='/login'
+            onClick={() => setIsOpen(false)}
+            className='flex items-center gap-3 hover:bg-muted mb-2 p-3 rounded-lg transition-colors'
+            activeProps={{
+              className:
+                'flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mb-2',
+            }}
+          >
+            <Calendar size={20} />
+            <span className='font-medium'>Login</span>
           </Link>
 
           {/* Demo Links Start */}

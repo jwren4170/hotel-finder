@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from './components/ui/card';
 import { stripHtmlTags, truncateText } from './lib/utils';
-import SearchForm from './components/SearchHotels';
+import SearchForm from './components/hotel/SearchHotels';
 import { MapPin, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './components/ui/button';
 

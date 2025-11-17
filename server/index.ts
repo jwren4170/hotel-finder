@@ -1,17 +1,24 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import bookingRoutes from './routes/bookings';
+import bookingRoutes from '@/server/routes/bookings';
+import { authHandler } from '@/server/routes/auth';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // Your frontend URL
+    credentials: true, // Allow cookies to be sent
+  })
+);
 app.use(express.json());
 
 // Routes
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/auth', authHandler);
 
 // Health check
 app.get('/api/health', (_req, res) => {

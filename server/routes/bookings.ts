@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { db } from '../db/index';
-import { bookingsTable } from '../db/schema';
+import { db } from '@/server/db/index';
+import { bookingsTable } from '@/server/db/schema';
 import { eq, and, gte } from 'drizzle-orm';
 
 const bookingRoutes = Router();

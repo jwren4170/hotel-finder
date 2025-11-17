@@ -13,8 +13,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { stripHtmlTags } from '@/lib/utils';
-import BookingForm from '@/components/BookingForm';
-import BookingConfirmation from '@/components/BookingConfirmation';
+import BookingForm from '@/components/booking/BookingForm';
+import BookingConfirmation from '@/components/booking/BookingConfirmation';
 
 const RoomRates = () => {
   const { hotel, room, rates } = useLoaderData({

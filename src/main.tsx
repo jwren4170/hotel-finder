@@ -13,18 +13,19 @@ import z, { _ZodString } from 'zod';
 import './styles.css';
 
 import App from '@/App.tsx';
-import Header from '@/components/Header.tsx';
-import HotelDetail from '@/components/HotelDetail.tsx';
-import RoomDetails from '@/components/RoomDetails.tsx';
-import MyBookings from '@/components/MyBookings.tsx';
-import ErrorComponent from '@/components/ErrorComponent';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import Header from '@/components/layout/Header.tsx';
+import HotelDetail from '@/components/hotel/HotelDetail.tsx';
+import RoomDetails from '@/components/room/RoomDetails.tsx';
+import MyBookings from '@/components/booking/MyBookings.tsx';
+import ErrorComponent from '@/components/common/ErrorComponent';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import LoginPage from '@/components/pages/Login';
 import {
   getHotelsByCity,
   getHotelDetails,
   getRoomRates,
 } from '@/services/hotelService';
-import RoomRates from '@/components/RoomRates.tsx';
+import RoomRates from '@/components/room/RoomRates.tsx';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -186,12 +187,19 @@ const bookingsRoute = createRoute({
   ),
 });
 
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   detailsRoute,
   roomDetailsRoute,
   roomRatesRoom,
   bookingsRoute,
+  loginRoute,
 ]);
 
 const router = createRouter({

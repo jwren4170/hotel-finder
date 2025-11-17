@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import RoomPhotoCarousel from '@/components/RoomPhotoCarousel';
+import RoomPhotoCarousel from '@/components/room/RoomPhotoCarousel';
 
 const RoomDetails = () => {
   const { hotel, room, hasAvailability } = useLoaderData({

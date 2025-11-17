@@ -5,10 +5,56 @@ import {
   decimal,
   timestamp,
   date,
+  boolean,
 } from 'drizzle-orm/pg-core';
 
-// Better Auth will create its own tables (user, session, account, verification)
-// We just need to define our custom tables here
+// Better Auth tables - required for authentication
+export const user = pgTable('users', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  emailVerified: boolean('email_verified').default(false),
+  password: varchar('password'),
+  image: varchar('image', { length: 255 }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const session = pgTable('sessions', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  userId: varchar('user_id', { length: 255 }).notNull(),
+  token: varchar('token', { length: 255 }).notNull(),
+  ipAddress: varchar('ip_address', { length: 255 }),
+  userAgent: varchar('user_agent', { length: 500 }),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const account = pgTable('accounts', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  userId: varchar('user_id', { length: 255 }).notNull(),
+  accountId: varchar('accountId').notNull(),
+  providerId: varchar('providerId').notNull(),
+  accessToken: varchar('accessToken'),
+  refreshToken: varchar('refreshToken'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: varchar('scope'),
+  idToken: varchar('idToken'),
+  password: varchar('password'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const verification = pgTable('verifications', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  identifier: varchar('identifier', { length: 255 }).notNull(),
+  value: varchar('value', { length: 255 }).notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
 
 // Bookings table for hotel reservations
 export const bookingsTable = pgTable('bookings', {
