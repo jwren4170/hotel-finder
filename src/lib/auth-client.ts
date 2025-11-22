@@ -22,5 +22,34 @@ export const signInWithEmail = async (email: string, password: string) => {
     email,
     password,
   });
+
+  // Check if there's an error in the response
+  if (data.error) {
+    throw new Error(data.error.message || 'Invalid email or password');
+  }
+
+  return data;
+};
+
+// Email/password sign-up
+export const signUpWithEmail = async (
+  email: string,
+  password: string,
+  name: string
+) => {
+  const data = await signUp.email({
+    email,
+    password,
+    name,
+  });
+
+  // Check if there's an error in the response
+  if (data.error) {
+    throw new Error(
+      data.error.message ||
+        'Failed to create account. Email may already be in use.'
+    );
+  }
+
   return data;
 };

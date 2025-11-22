@@ -6,20 +6,55 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   signInWithGitHub,
   signInWithEmail,
   useSession,
   signOut,
 } from '@/lib/auth-client';
-import { Mail } from 'lucide-react';
+import { Link, useSearch } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
 
 const LoginPage = () => {
   const { data: session } = useSession();
+  const search = useSearch({ from: '/login' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log('Session data:', session);
 
-  // If user is logged in, show their info
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (session?.user) {
+      const redirectTo = search.redirect || '/';
+      window.location.href = redirectTo;
+    }
+  }, [session, search.redirect]);
+
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await signInWithEmail(email, password);
+      // Success - redirect to the specified page or home
+      const redirectTo = search.redirect || '/';
+      window.location.href = redirectTo;
+    } catch (err: any) {
+      setError(
+        err.message || 'Failed to sign in. Please check your credentials.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // If user is logged in, show loading (will redirect via useEffect)
   if (session?.user) {
     return (
       <div className='flex justify-center items-center bg-linear-to-br from-background to-muted/20 p-4 min-h-screen'>
@@ -116,24 +151,70 @@ const LoginPage = () => {
             </div>
             <div className='relative flex justify-center text-xs uppercase'>
               <span className='bg-background px-2 text-muted-foreground'>
-                Or continue with
+                Or sign in with email
               </span>
             </div>
           </div>
 
-          {/* Email login */}
-          <Button
-            className='w-full h-11 font-medium text-base cursor-pointer'
-            variant='outline'
-            onClick={() => signInWithEmail('user@example.com', 'password123')}
-          >
-            <Mail className='mr-2 w-5 h-5' />
-            Continue with Email
-          </Button>
+          {/* Email/Password login form */}
+          <form onSubmit={handleEmailSignIn} className='space-y-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='email'>Email</Label>
+              <Input
+                id='email'
+                type='email'
+                placeholder='you@example.com'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='password'>Password</Label>
+              <Input
+                id='password'
+                type='password'
+                placeholder='••••••••'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            {error && (
+              <div className='bg-destructive/10 p-3 border border-destructive rounded-md text-destructive text-sm'>
+                {error}
+              </div>
+            )}
+
+            <Button
+              type='submit'
+              className='w-full h-11 font-medium text-base'
+              variant='default'
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
 
           <p className='mt-4 text-muted-foreground text-xs text-center'>
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
+
+          <div className='mt-6 text-center'>
+            <p className='text-muted-foreground text-sm'>
+              Don't have an account?{' '}
+              <Link
+                to='/register'
+                className='font-medium text-primary hover:underline'
+              >
+                Register
+              </Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

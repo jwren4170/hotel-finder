@@ -20,6 +20,7 @@ import MyBookings from '@/components/booking/MyBookings.tsx';
 import ErrorComponent from '@/components/common/ErrorComponent';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import LoginPage from '@/components/pages/Login';
+import RegisterPage from '@/components/pages/Register';
 import {
   getHotelsByCity,
   getHotelDetails,
@@ -187,10 +188,28 @@ const bookingsRoute = createRoute({
   ),
 });
 
+const authSearchSchema = z.object({
+  redirect: z.string().optional(), // Where to redirect after login/register
+});
+
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
+  validateSearch: authSearchSchema.parse,
   component: LoginPage,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading login page...' />
+  ),
+});
+
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/register',
+  validateSearch: authSearchSchema.parse,
+  component: RegisterPage,
+  pendingComponent: () => (
+    <LoadingSpinner fullScreen text='Loading registration page...' />
+  ),
 });
 
 const routeTree = rootRoute.addChildren([
@@ -200,6 +219,7 @@ const routeTree = rootRoute.addChildren([
   roomRatesRoom,
   bookingsRoute,
   loginRoute,
+  registerRoute,
 ]);
 
 const router = createRouter({
